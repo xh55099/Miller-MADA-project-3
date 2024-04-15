@@ -1,7 +1,7 @@
 ---
-title: "Example Manuscript Template for a Data Analysis Project"
-subtitle: ""
-author: Andreas Handel
+title: "Geographic Spread of Seasonal Flu"
+subtitle: "Clarke Miller MADA Project"
+author: Clarke Miller
 date: "`r Sys.Date()`"
 format:
   docx:
@@ -12,159 +12,319 @@ bibliography: ../../assets/dataanalysis-references.bib
 csl: ../../assets/apa.csl
 ---
 
-The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. 
-You don't need to have exactly these sections, but the content covering those sections should be addressed.
+```{r, echo=FALSE, message=FALSE}
 
-This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
+# load a few R packages
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(knitr))
+
+```
+
+# Abstract:
+
+The influenza virus causes respiratory illness in a wide variety of hosts. Further, flu viruses tend to prone to mutation and recombination.  Viruses in general have many avenues for mutation.  One of the primary mechanisms for this high mutation rate include facots such as an error prone low-fidelity viral RNA dependent RNA polymerase lacking exonulease proofreading capacity, high turnover rate, and host cell specific factors.  The influenza virus is also prone to recombination if two, or more, strains infect the same host simultaneously.  Given the ability of many flu viruses to cross over from one species to another, the chance of such an occurrence is not zero. [***@Domingo-2010***] As such, seasonal outbreaks of influenza, and especially in swine, poultry, and humans, have the potential to cause outbreaks of flu viruses which could pose a serious threat to public health. [***@Taubenberger-2010***]  Because of these factors, it is advantageous to track the incidence of flu outbreaks across the globe.  This data is then used to look for serious outbreaks and species crossover events.  The collected flu incidence data is also used to track the spread of seasonal flu as it spreads accross the globe each year.  This data helps public health officials to predict patterns of flu and to guess whihc strains should included in vaccine preparation.  
+
+# Introduction:
+
+## General Background Information:
+
+Influenza is an acute respiratory virus caused by one of several strains of virus. Seasonal influenza is typically caused by circulating "A" and "B" strains of the disease. Infection is accompanied by typical respiratory symptoms. These may include cough, sore throat, and nasal discharge. Symptoms can also include abrupt onset of high-grade fever, muscle ache, loss of appetite, headache, and malaise. After a typical course, influenza can go on to affect other organs such as the lungs, brain, and heart. Severe infections may require hospitalization. Influenza infection can be much more severe for children, elderly adults, patients with chronic illnesses, and immunocompromised hosts. According to data provided by the World Health organization, seasonal respiratory illnesses are linked to over 650,000 deaths each year worldwide. In the United States the flu is responsible for approximately 42,000 deaths per year and ranks 13th most frequent cause of death. As such, influenza is the subject of extensive public health surveillance and mediation efforts.[***@Krammer-2018***; ***@Moghadami-2017***]
+
+## Description of Data and Data Source:
+
+Detailed data on covid and flu strains, outbreaks, and general epidemiological information is available via several sources. Data on these infectious diseases is available from sites such as GISAID (<https://gisaid.org/>) and the Global Health Data Exchange (<https://ghdx.healthdata.org/>). These databases are highly detailed and can provide data that includes information about lineage and geographic data. (See **Figure 1** Below.) Yearly surveillance data is also available from the World Health Organization Global Influenza Programme.
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 1: World Flu Burden by Clade."
+#| echo: FALSE
+knitr::include_graphics(here("assets","World Flu by Cladep.png"))
+
+```
+
+***Figure 1:*** *World Flu Burden by Clade.* Figure generated at GISAID.org.
+
+## Questions/Hypotheses to be Addressed:
+
+The research questions that I would like to answer are:
+
+1.  Can the progression of flu outbreaks be traced geographically or temporally over the course of a year?
+
+2.  Is there a specific location from which the annual predominant strain of flu originates?
+
+3.  If a pattern can be established, does it repeat on a yearly basis? Does the pattern shift from year to year? Can other factors, such as weather, account for any changes to this pattern?
+
+I am certain that efforts like this already exist. The best of these is software produced by Nextstrain (<https://nextstrain.org/>) which is capable of resolving complex time/geographic coupled with genetic data for reported viral infections. Nextstrain offers real-time tracking of pathogen evolution for viruses such as SARS-CoV-2, seasonal flu, avian flu, mpox, RSV, and dengue. In fact, the graphic used in Figure 1 (above) was made by GISAID using Nextstrain software. My purpose for this project is to use this project as a learning tool and to see if I can replicate, in a small way, those prior efforts. Data to support this project is readily available from multiple sources such as GISAID (<https://gisaid.org/>), the World Health Organization Global Influenza Programme (<https://www.who.int/tools/flunet>).
+
+# Methods:
+
+## Schematic of Workflow:
+
+## Data Aquisition:
+
+Data was acquired from the World Health Organization Global Influenza Programme. The data includes the excel files containing raw data (VIW_FNT_CM.xlsx) and a file containing the legend for the data (VIW_FLU_METADATA.csv). This data set is one example of the data available for a project of this sort. This specific data set includes information on 89 different parameters associated with influenza outbreaks as reported world-wide since about 1995. The data includes time, region, type of flu, and many other variables that are important for answering the questions posed above.
+
+## Data import and cleaning:
+
+Data was imported directly from the repository as an xlsx file. (VIW_FNT_CM.xlsx) The file was cleaned to remove missing data. A .rds version of the data was saved (VIW_FNT_CM.rds). Data that was filtered or summarized for graphs, tables, and for eventual statistical analysis were saved as individual .rds or csv files. All data analysis and statistical work was performed and documented in a separate .qmd file (workspace.qmd).
+
+## Exploratory/Descriptive analysis:
+
+In order to get a feel for the scale of data in the VIW_FNT_CM.xlsx one often needs to summarize or tabulate the data. In this case, the data set is very large and summary tables exceedingly cumbersome. Given the size of the data set, it is best to begin with a graph of the incidence of influenza type A, type B, and the total number of reported cases for the duration of reported. (See **Figure 2.**)
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 2: World Flu Burden by Year."
+#| echo = FALSE
+knitr::include_graphics(here("results", "figures","plot1.png"))
+
+```
+
+***Figure 2:*** *World Flu Burden by Year.*
+
+The graph reveals the extent of the data available. The graph also reveals interesting features of the data set that may not have been readily apparent from if viewing the data in a tabular format. Since 1995 the number of seasonal flu cases has followed a pattern that peaked during the winter months in the Northern hemisphere. Notable features of this graph include the large jump in reported cases in the year 2010 and the large gap in reported cases in the year 2021. The jump in cases on or about 2010 is due to increased participation in surveillance efforts and improved diagnostic techniques. Hand in hand with these factors was an increasing awareness of the issue and consequent increased rate of reporting. [***@Perdue-2012***] The gap in the 2021 flu season was likely due to the measures taken to curb the SARS-CoV-2 pandemic through the 2020-2021 flu season. Basic measures such as maintaining proper social distance, hand washing, public wearing of masks to prevent aerosol droplet spread, and other efforts were extremely effective at preventing the spread of seasonal flu. [***@Rubin-2021***] Never the less, the amount of data reported worldwide since 1995 is massive. In fact, the data is so dense that none of the categories of flu selected are visible as separate itmes in the bar graph. Further filtering is obviously required. For example, we might want to look at the total flu cases compared to the number of total cases of the A strains and the total number of the B strains in countries such as China, Australia, Canada, and France. It is also a good idea to clean up the data by omitting any missing values. **Figure 3** depicts the data set filtered for information from China.
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 3: World Flu Burden by Year for China Since Reporting Began."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2.png"))
+
+```
+
+***Figure 3:*** *World Flu Burden by Year for China Since Reporting Began.*
+
+Restricting the data set to a single country doesn't seen to resolve the data in a useful manner. Overall the data still shows the same basic structure and features as the entire data set. It may be helpful to focus in on a single year. **Figure 4** depicts the influenza surveillance data for the country of China for a single flu season.
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 4: World Flu Burden by Year."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot3.png"))
+
+```
+
+***Figure 4:*** *World Flu Burden by Year: China, 2023-2024 Flu Season.*
+
+These graphs help whittle down the data a bit. For example, we can look at the stacked graph in **Figure 4** to see that over the course of the year the major flu variant shifted from influenza A to influenza B. That being said, this format is not helpful for looking at the incidence over time per country or per region and comparison of those regions. To look at the data in that manner and, perhaps, look for time and geographical patterns a simple scatter plot may be helpful. For example, a graph of total reported cases of flu for each WHO region over a single flu season may be revealing. (See **Figure 5**)
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 5: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2C.png"))
+
+
+```
+
+***Figure 5:*** *World Flu Burden by Region Over the 2023-2024 Flu Season.*
+
+The resulting graph shows that the maxima for the three largest WHO flu regions, WPR, AMR, and EUR, do follow each other by approximately 3-4 weeks. The region encompassing Europe shows two distinct maxima. The first maxima is preceded by the maxima in the People's Republic of China WHO region by 3-4 weeks and corresponds to the largest maxima in the AMR data. The second is preceded by the maxima in the data from the WHO Americas Region by the same 3-4 week time frame. The data from the AMR region also show a second peak in the number of flu cases reported that follows the first EUR region peak by approximately 3-4 weeks. Perhaps this indicates spread from EUR back to the AMR region? As such there certainly seems to be a geographic/time component to the spread of the flu worldwide. (West to east in the northern hemisphere.) Further analysis of the available phylogeographic data may be able to pinpoint the origin of each specific strain. In **Figure 5** it is also apparent that the relative magnitudes of the values of the WPR, AMR, and EUR regions overwhelm the data from the other WHO regions. In this case it may be prudent to separate the graphs into separate graphs for WPR, AMR, EUR and AFR, EMR, SEAR. (See **Figure 6** and **Figure 7.**)
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 6: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2D.png"))
+
+
+```
+
+***Figure 6:*** *World Flu Burden by Region Over the 2023-2024 Flu Season.* WHO Regions: WPR, AMR, and EUR
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 7: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2E.png"))
+
+```
+
+***Figure 7:*** *World Flu Burden by Region Over the 2023-2024 Flu Season.* WHO Regions: AFR, EMR, SEAR
+
+By splitting the graphs a great deal more detail can be discerned. In addition to the putative west to east pattern that appeared for the WPR, AMR, and EUR WHO regions, there is a similar pattern for the SEAR and EMR regions. An easy interpretation of this data would point to the seasonal flu beginning in the southeast Asia WHO region progressing to the eastern Mediterranean WHO region, then progressing to the WPR, AMR, and the EUR WHO regions respectively. Of course, it is impossible to draw any conclusions from this data set and a single season. To make a solid determination the data set would need to track not just time and geographic information, but connect the actual flu strains as they move around the globe. This can be done with genetic data, i.e. DNA or RNA sequence data, from the flu cases reported. In fact this is exactly the approach that the Nextstrain software takes. In addition to presenting strong evidence of the central question of this research. Further, graphing the data as opposed to attempting to generate a summary table is a far more effective way to explore the data set. As can be seen from **Table 1** (below), a tabular format doesn't highlight the patterns in the data in the same explicit manner as the graphic exploration.
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: tbl-summary_flu_table
+#| tbl-cap: "Reported Flu Cases for the 2023-2024 Season by WHO Region."
+#| echo: FALSE
+resulttable=readRDS("../../results/tables/flu_table_file.rds")
+knitr::kable(resulttable)
+
+
+```
+
+***Table 1:*** *World Flu Burden by Region Over the 2023-2024 Flu Season.*  The data is restricted to September 2023 through February 2024.
+
+
+## Statistical Analysis:
+
+# Basic statistical analysis:
+
+A cursory look at the data presented in **Figure 6** (above) shows a putative dependence of the AMR region flu season on the flu season peak approximately 3 week prior in the WPR region.  Likewise the peaks in reported flu cases in the EUR region seem to correspond to the WPR maxima approximately 3 weeks prior followed by a second maxima at a 3 week delay from the AMR region maxima. An appropriate initial analysis would be to simply perform a linear regression of the data with the AMR and the EUR WHO regions being the dependent variables based on all other variables.  (See **Table 2** and **Table 3** below.) 
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: tbl-lmtableA
+#| tbl-cap: ""
+#| echo: FALSE
+resulttable=readRDS("../../results/tables/lmtableA.rds")
+knitr::kable(resulttable)
+
+```
+***Table 2:*** *Simple Linear Regression of AMR Dependent and All Other Variables as Independent.*
+
+```{r, echo=FALSE, message=FALSE}
+
+
+#| label: tbl-lmtableB
+#| tbl-cap: ""
+#| echo: FALSE
+resulttable=readRDS("../../results/tables/lmtableB.rds")
+knitr::kable(resulttable)
+
+```
+***Table 3:*** *Simple Linear Regression of EUR Dependent and All Other Variables as Independent.*
+
+From the results of the initial analysis, it is clear that there is a large error associated with the fit.  Therefore the model mat not be a good model for this data set.  The data may create a better model if the data for each flu region were normalized for number of reported cases.  The data may create a better model if the individual region data were aligned for peak dates.  In each case the peak number of reported cases is apporximately three weeks apart.  
+
+A simple multiple linear regression of the resulting data set allowing the EUR data to be dependent data, while using offset data from the WPR and AMR regions as independent data should reveal a strong relationship.  Once again, the easiest model to use for this analysis is a simple regression model.  The models should explore the dependence of current flu levels in the AMR and EUR WHO regions based on the levels of flu reported in the EMR, and WPR regions and the EMR, WPR, and AMR regions respectively.  If we consider that the trend may not be merely west to east, but that there may be feedback from the EUR region to the AMR region then another possible model would be the dependence of flu cases in the AMR region on cases in the later two regions.  The remaining regions are also normalized to number of reported cases to make the comparison equitable.  (See **Table 4.**, **Table 5.**, and **Table 6.** below.)
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: tbl-lmtable1
+#| tbl-cap: ""
+#| echo: FALSE
+resulttable=readRDS("../../results/tables/lmtable1.rds")
+knitr::kable(resulttable)
+
+```
+***Table 4:*** *Simple Linear Regression of AMR Dependent with EMR and WPR as Independent Using Date Aligned Data.*
 
 
 ```{r, echo=FALSE, message=FALSE}
-# load a few R packages
-library(here)
-library(knitr)
-```
 
-
-
-# Summary/Abstract
-_Write a summary of your project._
-
-
-{{< pagebreak >}}
-
-
-# Introduction 
-
-## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
-
-## Description of data and data source
-_Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
-
-## Questions/Hypotheses to be addressed
-_State the research questions you plan to answer with this analysis._
-
-To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above and have the right bibtex key. Then you can include like this:
-
-Examples of reproducible research projects can for instance be found in [@mckay2020; @mckay2020a].
-
-
-
-{{< pagebreak >}}
-
-
-# Methods 
-
-_Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement._
-
-
-## Schematic of workflow
-
-Sometimes you might want to show a schematic diagram/figure that was not created with code (if you can do it with code, do it). @fig-schematic is an example of some - completely random/unrelated - schematic that was generated with Biorender.
-We store those figures in the `assets` folder.
-
-```{r}
-#| label: fig-schematic
-#| fig-cap: "A figure that is manually generated and shows some overview/schematic. This has nothing to do with the data, it's just a random one from one of our projects I found and placed here."
+#| label: tbl-lmtable2
+#| tbl-cap: ""
 #| echo: FALSE
-knitr::include_graphics(here("assets","antigen-recognition.png"))
+resulttable=readRDS("../../results/tables/lmtable2.rds")
+knitr::kable(resulttable)
+
 ```
+***Table 5:*** *Simple Linear Regression of EUR Dependent with EMR, WPR, and AMR as Independent Using Date Aligned Data.*
 
 
+```{r, echo=FALSE, message=FALSE}
 
+#| label: tbl-lmtable3
+#| tbl-cap: ""
+#| echo: FALSE
+resulttable=readRDS("../../results/tables/lmtable3.rds")
+knitr::kable(resulttable)
 
-## Data aquisition
-_As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._
-
-
-## Data import and cleaning
-_Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._
-
-
-## Statistical analysis
-_Explain anything related to your statistical analyses._
-
-
-{{< pagebreak >}}
+```
+***Table 6:*** *Simple Linear Regression of AMR Dependent with EMR, WPR, and EUR as Independent Using Date Aligned Data*
 
 
 # Results
 
-## Exploratory/Descriptive analysis
-
-_Use a combination of text/tables/figures to explore and describe your data. Show the most important descriptive results here. Additional ones should go in the supplement. Even more can be in the R and Quarto files that are part of your project._
-
-
-@tbl-summarytable shows a summary of the data.
-
-Note the loading of the data providing a **relative** path using the `../../` notation. (Two dots means a folder up). You never want to specify an **absolute** path like `C:\ahandel\myproject\results\` because if you share this with someone, it won't work for them since they don't have that path. You can also use the `here` R package to create paths. See examples of that below. I generally recommend the `here` package.
-
-```{r}
-#| label: tbl-summarytable
-#| tbl-cap: "Data summary table."
-#| echo: FALSE
-resulttable=readRDS("../../results/tables/summarytable.rds")
-knitr::kable(resulttable)
-```
-
-
-
-## Basic statistical analysis
-
-_To get some further insight into your data, if reasonable you could compute simple statistics (e.g. simple models with 1 predictor) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._
-
-
-@fig-result shows a scatterplot figure produced by one of the R scripts.
-
-```{r}
-#| label: fig-result
-#| fig-cap: "Height and weight stratified by gender."
-#| echo: FALSE
-knitr::include_graphics(here("results","figures","height-weight-stratified.png"))
-```
+It is obvious from the regression data presented in **Table 4** that the cases of flu reported in the AMR WHO region are likely associated with the prior outbreak in the WPR region.  The EMR region is likely not a contributing factor.  Likewise, in **Table 5** the same can be said of the EUR WHO region outbreak.  It seems to be much more heavily dependent on the WPR region outbreak than the outbreaks in the AMR or EMR regions.  The results presented in **Table 4** were upheld by the results from **Table 6** where the linear regression set the AMR data as dependent and with EMR, WPR, and EUR as independent variables.  In this case we also see the association with previous outbreaks being potentailly linked to the WPR region outbreak.     
 
 
 ## Full analysis
 
-_Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here._
+In an attempt to determine how well a linear regression model fits the data that is being used a random forest model was constructed.  Data that was  unaligned data (**Figure 8 and Table 7**) and date aligned data (**Figure 9 and Table 8**) was used.  In each case the AMR variable was held as dependent and the reported flu cases from the other WHO regions were the independent variables.  
 
-Example @tbl-resulttable2 shows a summary of a linear model fit.
 
-```{r}
-#| label: tbl-resulttable2
-#| tbl-cap: "Linear model fit table."
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 8: Graph of the Randon Forest Output for the Unaligned Data Set."
 #| echo: FALSE
-resulttable2 = readRDS(here("results","tables","resulttable2.rds"))
-knitr::kable(resulttable2)
+knitr::include_graphics(here("results", "figures","randomForestRegressionDR_AMR.png"))
+
 ```
 
+***Figure 8:*** *Graph of the Random Forest Output for the Unaligned Data Set.*
 
-{{< pagebreak >}}
+
+```{r}
+
+#data_locationRF1 <- here::here("data","processed-data","DR_AMR_rf_model.rds")
+#DR_AMR.rf <- readRDS(data_locationRF1)
+#print(DR_AMR.rf)
+
+```
+***Table 9:*** *Random Forest Output for the Unaligned Data Set. Simple Linear Regression of AMR Dependent with WHO Regions as Independent Using Date Unaligned Data*
+
+
+```{r, echo=FALSE, message=FALSE}
+
+#| label: fig-schematic
+#| fig-cap: "Figure 9: Graph of the Randon Forest Output for the Date Aligned Data Set."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","randomForestRegressionAMR.png"))
+
+```
+
+***Figure 9:*** *Graph of the Random Forest Output for the Date Aligned Data Set.*
+
+
+```{r}
+
+#data_locationRF2 <- here::here("data","processed-data","AMR_rf_model.rds")
+#AMR.rf <- readRDS(data_locationRF2)
+#print(AMR.rf) 
+
+```
+
+***Table 10:*** *Random Forest Output for the Date Aligned Data Set. Simple Linear Regression of AMR Dependent with WHO Regions as Independent Using Date Unaligned Data*
 
 
 # Discussion
 
+If the Mean Squared Error (MSE) is very high (13640640 and 9173785, respectively) but the percentage of variance explained (87.64% and 92.72%, respectively) is close to one, this suggests a few possible scenarios:
+
+1.  **Over-fitting:** The model may be over-fitting to the training data, capturing noise or specific patterns that do not generalize well to unseen data. This can lead to high MSE as the model's predictions are inaccurate for new data despite explaining a high percentage of variance in the training data.
+    
+2. **Complexity Issues:** The model might be too complex relative to the amount of training data available. Random forests are powerful and can capture complex relationships, but they can also over-fit if not properly tuned or if the data size is limited.
+    
+3.  **Outliers or Anomalies:** High MSE could also be influenced by outliers or anomalies in the data set, which the model struggles to fit accurately.
+
+For each of these issues there are several possible solutions:
+    
+*Overall Model Evaluation:* It is crucial to evaluate the performance of the model on separate test data set (not used during training) to assess its ability to generalize to new data accurately.  In this case, perhaps using more than a single year of data as train/test data may yield better results.  
+    
+*Hyperparameter Tuning:* Optimizing parameters such as tree depth, number of trees in the forest, minimum samples per leaf/node, etc., may help to find a balance between model complexity and generalization.
+
+*Feature Engineering and Selection:* Review the features used in the model and consider if feature engineering (creating new features) or feature selection techniques can improve model performance and reduce over-fitting.
+    
+*Data Quality Check:* Verify the data quality, handle outliers appropriately, and ensure that the data set is representative of the problem domain without introducing biases or noise.  In the data that was selected for this project, there was no examination for outliers.  Again, including data from multiple years and normalizing that data to population, reported cases per population or some other metric may produce better results.
+
+By addressing these aspects and fine-tuning the model, its performance can be improved, over-fitting reduced, and its ability to make accurate predictions on new, unseen data enhanced.
+
 ## Summary and Interpretation
-_Summarize what you did, what you found and what it means._
+
+
 
 ## Strengths and Limitations
-_Discuss what you perceive as strengths and limitations of your analysis._
+
+
 
 ## Conclusions
-_What are the main take-home messages?_
 
-_Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end_
+*What are the main take-home messages?*
 
-This paper [@leek2015] discusses types of analyses. 
-
-These papers [@mckay2020; @mckay2020a] are good examples of papers published using a fully reproducible setup similar to the one shown in this template. 
-
-Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal [are available](https://www.zotero.org/styles). You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like.
 
 
 {{< pagebreak >}}
 
 # References
-
-
-

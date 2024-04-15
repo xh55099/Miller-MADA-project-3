@@ -1,0 +1,141 @@
+---
+title: "Processing Code CM"
+author: "C Miller"
+format: docx
+editor: visual
+---
+
+```{r}
+#Call a bunch of libraries. 
+suppressPackageStartupMessages(library(tidyverse)) 
+suppressPackageStartupMessages(library(ggplot2)) 
+suppressPackageStartupMessages(library(broom)) 
+suppressPackageStartupMessages(library(here)) 
+suppressPackageStartupMessages(library(readxl)) 
+suppressPackageStartupMessages(library(dplyr)) 
+suppressPackageStartupMessages(library(tidyr)) 
+suppressPackageStartupMessages(library(skimr)) 
+suppressPackageStartupMessages(library(gt)) 
+suppressPackageStartupMessages(library(dslabs)) 
+suppressPackageStartupMessages(library(plotly)) 
+suppressPackageStartupMessages(library(gapminder)) 
+suppressPackageStartupMessages(library(kableExtra)) 
+suppressPackageStartupMessages(library(openxlsx)) 
+suppressPackageStartupMessages(library(xlsx)) 
+suppressPackageStartupMessages(library(lubridate)) 
+suppressPackageStartupMessages(library(gt))
+
+suppressPackageStartupMessages(library(parsnip)) 
+suppressPackageStartupMessages(library(tune)) 
+suppressPackageStartupMessages(library(recipes)) 
+suppressPackageStartupMessages(library(workflows)) 
+suppressPackageStartupMessages(library(yardstick)) 
+suppressPackageStartupMessages(library(rsample))
+
+
+#Load data
+data_location <- here::here("data","processed-data","DATE_REGION.xlsx")
+date_region <- readxl::read_excel(data_location)
+
+#Narrow down to 6 specific WHO regions
+date_region2 <- date_region %>% select(AFR, AMR, EMR, EUR, SEAR, WPR)
+
+print(date_region2)
+
+data_location <- here::here("data","processed-data","REGION_OFFSET.xlsx")
+Region_offset <- readxl::read_excel(data_location)
+
+print(Region_offset)
+
+```
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(broom)) 
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(readxl)) 
+suppressPackageStartupMessages(library(dplyr)) 
+suppressPackageStartupMessages(library(tidyr)) 
+suppressPackageStartupMessages(library(skimr))
+suppressPackageStartupMessages(library(gt))
+suppressPackageStartupMessages(library(dslabs))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(openxlsx))
+suppressPackageStartupMessages(library(xlsx))
+library(randomForest)
+library(ranger)
+
+# Region 2 data
+# Create random forest for regression 
+DR_AMR.rf <- randomForest(AMR ~ ., data = date_region2, mtry = 3, 
+                         importance = TRUE, na.action = na.omit) 
+
+# Print regression model 
+print(DR_AMR.rf) 
+
+save_data_rf1 <- here::here("data","processed-data","DR_AMR_rf_model.rds")
+saveRDS(DR_AMR.rf, file = save_data_rf1)
+
+# save fit results table  
+table_fileRF1 = here("results", "tables", "DR_AMR_rf.rds")
+saveRDS(DR_AMR.rf, file = table_fileRF1)
+
+# Output to be present as PNG file  
+png(file = "randomForestRegressionDR_AMR.png") 
+  
+# Plot the error vs the number of trees graph 
+plotRF1 <- plot(DR_AMR.rf) 
+
+
+```
+```   {r}
+#Offset region data
+
+# Create random forest for regression 
+AMR.rf <- randomForest(AMR ~ ., data = Region_offset, mtry = 3, 
+                         importance = TRUE, na.action = na.omit) 
+
+# Print regression model 
+print(AMR.rf) 
+
+save_data_rf2 <- here::here("data","processed-data","AMR_rf_model.rds")
+saveRDS(AMR.rf, file = save_data_rf2)
+
+# save fit results table  
+table_fileRF2 = here("results", "tables", "AMR_rf.rds")
+saveRDS(DR_AMR.rf, file = table_fileRF2)
+
+# Output to be present as PNG file  
+png(file = "randomForestRegressionAMR.png") 
+  
+# Plot the error vs the number of trees graph 
+plot(AMR.rf) 
+
+
+```
+
+
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).

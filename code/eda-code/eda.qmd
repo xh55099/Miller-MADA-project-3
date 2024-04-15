@@ -3,9 +3,444 @@ title: "An example exploratory analysis script"
 date: "2024-02-07"
 output: html_document
 ---
+```{r}
+#Call a bunch of libraries.
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(ggplot2))
+suppressPackageStartupMessages(library(broom)) 
+suppressPackageStartupMessages(library(here))
+suppressPackageStartupMessages(library(readxl)) 
+suppressPackageStartupMessages(library(dplyr)) 
+suppressPackageStartupMessages(library(tidyr)) 
+suppressPackageStartupMessages(library(skimr))
+suppressPackageStartupMessages(library(gt))
+suppressPackageStartupMessages(library(dslabs))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(openxlsx))
+suppressPackageStartupMessages(library(xlsx))
 
+#Load excel data file
+#Data file from WHO "VIW_FNT_CM.xlsx"
+
+data_location <- here::here("data","raw-data","VIW_FNT_CM.xlsx")
+WHO_data_flu <- readxl::read_excel(data_location)
+
+
+#Save a rds version
+save_data_location <- here::here("data","processed-data","VIW_FNT_CM.rds")
+saveRDS(WHO_data_flu, file = save_data_location)
+
+summary(WHO_data_flu)
+
+
+
+```
   
-  
+Wow. That's a lot of data. Okay, let's filter the data a bit. I am still working out what my final analysis will look like and, frankly, doubting my coding abilities to produce a meaningful analysis. That being said, let's take a look.
+
+For example, we might want to look at the total flu cases compared to the number of total cases of the A strains and the total number of the B strains in countries such as China, Australia, Canada, and France. We also want to clean up the data by omitting any missing values. So we filter!
+
+```{r}
+
+WHO_data_flu <- WHO_data_flu %>% 
+  select(WHOREGION, MMWR_WEEKSTARTDATE, COUNTRY_AREA_TERRITORY, INF_ALL, INF_A, INF_B)
+
+summary(WHO_data_flu)
+
+# Plot the time axis data using a layered bar graph
+plot1 <- ggplot(WHO_data_flu, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "Country = all, 1995-2024 Season",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot1save = here("results", "figures", "plot1.png")
+ggsave(plot1save, plot1, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 2: World Flu Burden by Year."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures", "plot1.png"))
+
+# Plot the region axis data using a layered bar graph
+plot1B <- ggplot(WHO_data_flu, aes(x = WHOREGION)) +
+  geom_bar(aes(y = INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "Country = all, 1995-2024 Season",
+       x = "WHO Region",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot1Bsave = here("results", "figures", "plot1B.png")
+ggsave(plot1Bsave, plot1B, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 3: World Flu Burden by Region."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot1B.png"))
+
+
+```
+
+```{r}
+
+WHO_data_flu1 <- WHO_data_flu %>% filter(COUNTRY_AREA_TERRITORY == "China")
+WHO_data_flu1 <- WHO_data_flu1 %>% filter(COUNTRY_AREA_TERRITORY == "China")
+WHO_data_flu1 <- na.omit(WHO_data_flu1)
+
+library(gt)
+WHO_data_flu1 |> 
+  gt() 
+
+# Plot the data using a layered bar graph
+plot2 <- ggplot(WHO_data_flu1, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "Country = China, 2005-2024 Seasons",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot2save = here("results", "figures", "plot2.png")
+ggsave(plot2save, plot2, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 4: World Flu Burden by Year for China Since Reporting Began."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2.png"))
+
+
+```
+That's still a LOT of data. Notice the big gap around 2020-2022. That is due to the restrictions imposed by the COVID pandemic. Let's narrow this down to a more reasonable range... say to the beginning of the 2023-2024 flu season.
+
+```{r}
+WHO_data_flu2 <- WHO_data_flu1 %>% filter(MMWR_WEEKSTARTDATE > '2023-10-01')
+WHO_data_flu2 <- WHO_data_flu2 %>% filter(MMWR_WEEKSTARTDATE > '2023-10-01')
+WHO_data_flu2 <- na.omit(WHO_data_flu2)
+
+library(gt)
+WHO_data_flu2 |> 
+  gt() 
+
+# Plot the data using a layered bar graph
+plot3 <- ggplot(WHO_data_flu2, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "Country = China, 2023-2024 Seasons",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot3save = here("results", "figures", "plot3.png")
+ggsave(plot3save, plot3, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 4: World Flu Burden by Year."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot3.png"))
+
+WHO_data_fluB <- WHO_data_flu %>% filter(MMWR_WEEKSTARTDATE > '2023-05-01')
+WHO_data_fluB <- WHO_data_fluB %>% filter(MMWR_WEEKSTARTDATE > '2023-05-01')
+WHO_data_fluB <- na.omit(WHO_data_fluB)
+
+library(gt)
+WHO_data_fluB |> 
+  gt() 
+
+# Plot the region axis data using a layered bar graph
+plot1C <- ggplot(WHO_data_fluB, aes(x = WHOREGION)) +
+  geom_bar(aes(y = INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "Country = all, 2023-2024 Season",
+       x = "WHO Region",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot1Csave = here("results", "figures", "plot1C.png")
+ggsave(plot1Csave, plot1C, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 5: World Flu Burden by Region."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot1C.png"))
+
+plot2B <- ggplot(WHO_data_fluB, aes(x=MMWR_WEEKSTARTDATE)) +
+  geom_point(aes(y=INF_ALL, color = WHOREGION)) +
+  geom_line(aes(y=INF_ALL, color = WHOREGION)) +
+    labs(x = "DATE", y = "Total Reported Cases of FLU", title = "Scatterplot Flu Cases Per WHO Region for the 2023-2024 Flu Season") +
+  theme_minimal()
+
+plot2Bsave = here("results", "figures","plot2B.png")
+ggsave(plot2Bsave, plot2B, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 6: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2B.png"))
+
+suppressPackageStartupMessages(library(dplyr)) 
+
+summarized_data <- WHO_data_fluB %>%
+  group_by(WHOREGION, MMWR_WEEKSTARTDATE) %>%
+  summarize(TOT_INF_ALL = sum(INF_ALL))
+
+print(summarized_data)
+
+file_path = here("data", "processed-data", "summarized_data.csv")
+write.csv(summarized_data, file = file_path, row.names = FALSE)
+
+
+plot2C <- ggplot(summarized_data, aes(x=MMWR_WEEKSTARTDATE)) +
+  geom_point(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+  geom_line(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+    labs(x = "DATE", y = "Total Reported Cases of FLU", title = "Scatterplot Flu Cases Per WHO Region for the 2023-2024 Flu Season") +
+  theme_minimal()
+
+
+
+plot2Csave = here("results", "figures", "plot2C.png")
+ggsave(plot2Csave, plot2C, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 7: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2C.png"))
+
+summarized_dataB <- WHO_data_fluB %>%
+  group_by(WHOREGION, MMWR_WEEKSTARTDATE) %>%
+  summarize(TOT_INF_A = sum(INF_A))
+
+print(summarized_dataB)
+
+
+file_path1 = here("data", "processed-data", "summarized_dataB.csv")
+write.csv(summarized_dataB, file = file_path1, row.names = FALSE)
+
+summarized_dataC <- WHO_data_fluB %>%
+  group_by(WHOREGION, MMWR_WEEKSTARTDATE) %>%
+  summarize(TOT_INF_B = sum(INF_B))
+
+print(summarized_dataC)
+
+file_path2 = here("data", "processed-data", "summarized_dataC.csv")
+write.csv(summarized_dataC, file = file_path2, row.names = FALSE)
+
+```
+
+```{r}
+
+selected_regions1 <- c("WPR", "AMR", "EUR")
+selected_regions2 <- c("AFR", "SEAR", "EMR")
+
+# Filter the dataset for the selected regions
+subset_data1 <- subset(summarized_data, WHOREGION %in% selected_regions1)
+subset_data2 <- subset(summarized_data, WHOREGION %in% selected_regions2)
+
+plot2D <- ggplot(subset_data1, aes(x=MMWR_WEEKSTARTDATE)) +
+  geom_point(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+  geom_line(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+    labs(x = "DATE", y = "Total Reported Cases of FLU", title = "Scatterplot Flu Cases Per WHO Region for the 2023-2024 Flu Season") +
+  theme_minimal()
+
+
+
+plot2Dsave = here("results", "figures", "plot2D.png")
+ggsave(plot2Dsave, plot2D, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 8: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2D.png"))
+
+
+plot2E <- ggplot(subset_data2, aes(x=MMWR_WEEKSTARTDATE)) +
+  geom_point(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+  geom_line(aes(y=TOT_INF_ALL, color = WHOREGION)) +
+    labs(x = "DATE", y = "Total Reported Cases of FLU", title = "Scatterplot Flu Cases Per WHO Region for the 2023-2024 Flu Season") +
+  theme_minimal()
+
+
+plot2Esave = here("results", "figures", "plot2E.png")
+ggsave(plot2Esave, plot2E, width = 10, height = 6, dpi = 300)
+
+#| label: fig-schematic
+#| fig-cap: "Figure 9: World Flu Burden by Region Over the 2023-2024 Flu Season."
+#| echo: FALSE
+knitr::include_graphics(here("results", "figures","plot2E.png"))
+
+
+```
+
+
+
+```{r}
+
+summarized_dataALL <- WHO_data_fluB %>%
+  group_by(WHOREGION, MMWR_WEEKSTARTDATE) %>%
+  summarise(
+    TOT_INF_ALL = sum(INF_ALL),
+    TOT_INF_A = sum (INF_B),
+    TOT_INF_B = sum (INF_B)
+  )
+
+print(summarized_dataALL)
+
+file_path3 = here("data", "processed-data", "summarized_dataALL.csv")
+write.csv(summarized_dataALL, file = file_path3, row.names = FALSE)
+
+#WPR Region
+WHO_data_fluWPR <- summarized_dataALL %>% filter(WHOREGION == "WPR")
+WHO_data_fluWPR <- WHO_data_fluWPR %>% filter(WHOREGION == "WPR")
+WHO_data_fluWPR <- na.omit(WHO_data_fluWPR)
+
+
+print(WHO_data_fluWPR)
+
+file_path4 = here("data", "processed-data", "summarized_dataALL.csv")
+write.csv(WHO_data_fluWPR, file = file_path4, row.names = FALSE)
+
+# Plot the data using a layered bar graph
+plot5A <- ggplot(WHO_data_fluWPR, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = TOT_INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "WHOREGION = WPR, 2022-2024 Seasons",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot5Asave = here("results", "figures", "plot5A.png")
+ggsave(plot5Asave, plot5A, width = 10, height = 6, dpi = 300)
+
+#AMR Region
+WHO_data_fluAMR <- summarized_dataALL %>% filter(WHOREGION == "AMR")
+WHO_data_fluAMR <- WHO_data_fluAMR %>% filter(WHOREGION == "AMR")
+WHO_data_fluAMR <- na.omit(WHO_data_fluAMR)
+
+print(WHO_data_fluAMR)
+
+file_path5 = here("data", "processed-data", "WHO_data_fluAMR.csv")
+write.csv(WHO_data_fluAMR, file = file_path5, row.names = FALSE)
+
+# Plot the data using a layered bar graph
+plot5B <- ggplot(WHO_data_fluAMR, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = TOT_INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "WHOREGION = AMR, 2022-2024 Seasons",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot5Bsave = here("results", "figures", "plot5B.png")
+ggsave(plot5Bsave, plot5B, width = 10, height = 6, dpi = 300)
+
+#EUR Region
+WHO_data_fluEUR <- summarized_dataALL %>% filter(WHOREGION == "EUR")
+WHO_data_fluEUR <- WHO_data_fluEUR %>% filter(WHOREGION == "EUR")
+WHO_data_fluEUR <- na.omit(WHO_data_fluEUR)
+
+print(WHO_data_fluEUR)
+
+file_path6 = here("data", "processed-data", "WHO_data_fluEUR.csv")
+write.csv(WHO_data_fluEUR, file = file_path6, row.names = FALSE)
+
+# Plot the data using a layered bar graph
+plot5C <- ggplot(WHO_data_fluAMR, aes(x = MMWR_WEEKSTARTDATE)) +
+  geom_bar(aes(y = TOT_INF_ALL, fill = "INF_ALL"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_A, fill = "INF_A"), stat = "identity", color="black", position = "stack") + 
+  geom_bar(aes(y = TOT_INF_B, fill = "INF_B"), stat = "identity", color="black", position = "stack") + 
+  labs(title = "Influenza Cases Reported to WHO",
+       subtitle = "WHOREGION = AMR, 2022-2024 Seasons",
+       x = "Week",
+       y = "Number of Positive Specimens",
+       fill = "Influenza Type") + 
+  theme_minimal()
+
+plot5Csave = here("results", "figures", "plot5C.png")
+ggsave(plot5Csave, plot5C, width = 10, height = 6, dpi = 300)
+
+
+
+```
+
+```{r}
+
+library(lubridate)
+library(dplyr)
+
+print(summarized_data)
+
+summarized_data_work <- summarized_data 
+summarized_data_work <- summarized_data_work %>% mutate(MMWR = format(MMWR_WEEKSTARTDATE , "%Y-%m"))
+
+print(summarized_data_work)
+
+monthly_summary <- summarized_data_work %>% group_by(WHOREGION, MMWR) %>%
+summarize(TOT_FLU = sum(TOT_INF_ALL))
+
+print(monthly_summary)
+
+```
+
+```{r}
+
+monthly_summary1 <- monthly_summary %>% filter(MMWR > '2023-07')
+monthly_summary1 <- monthly_summary1 %>% filter(MMWR > '2023-07')
+
+selected_regions3 <- c("WPR", "AMR", "EUR", "AFR", "SEAR", "EMR")
+monthly_summary2 <- subset(monthly_summary1, WHOREGION %in% selected_regions3)
+
+monthly_summary2 <- monthly_summary2 %>%
+  group_by(WHOREGION, MMWR) 
+
+flu_data_wide <- monthly_summary2 %>% pivot_wider(names_from = MMWR, values_from = TOT_FLU)
+
+print(flu_data_wide)
+
+Flu_Tab_wide <- ggplot () + geom_blank() + labs(title = "Reported Flu Cases for the 2023-2024 Season by WHO Region.")
+
+file_path7 = here("results", "tables", "Flu_Tab_wide.png")
+ggsave(file_path7, plot = Flu_Tab_wide, device = "png")
+
+
+
+#Create the table.
+summary_flu_tab = flu_data_wide <- monthly_summary2 %>% pivot_wider(names_from = MMWR, values_from = TOT_FLU)
+print(summary_flu_tab)
+
+# save to file
+flu_table_file = here("results", "tables", "flu_table_file.rds")
+saveRDS(summary_flu_tab, file = flu_table_file)
+
+
+#Save a rds version
+save_data_location <- here::here("data","processed-data","flu_data_wide.rds")
+saveRDS(flu_data_wide, file = save_data_location)
+
+```
+
+
+**OLD STUFF**  
 This Quarto file loads the cleaned data and does some exploring.
 
 I'm only showing it the way where the code is included in the file. 
