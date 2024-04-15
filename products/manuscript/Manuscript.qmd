@@ -241,7 +241,7 @@ It is obvious from the regression data presented in **Table 4** that the cases o
 
 ## Full analysis
 
-In an attempt to determine how well a linear regression model fits the data that is being used a random forest model was constructed.  Data that was  unaligned data (**Figure 8 and Table 7**) and date aligned data (**Figure 9 and Table 8**) was used.  In each case the AMR variable was held as dependent and the reported flu cases from the other WHO regions were the independent variables.  
+In an attempt to determine how well a linear regression model fits the data that is being used a random forest model was constructed.  Data that was  unaligned data (**Figure 8 and Table S1**) and date aligned data (**Figure 9 and Table S2**) was used.  In each case the AMR variable was held as dependent and the reported flu cases from the other WHO regions were the independent variables.  
 
 
 ```{r, echo=FALSE, message=FALSE}
@@ -256,16 +256,6 @@ knitr::include_graphics(here("results", "figures","randomForestRegressionDR_AMR.
 ***Figure 8:*** *Graph of the Random Forest Output for the Unaligned Data Set.*
 
 
-```{r}
-
-#data_locationRF1 <- here::here("data","processed-data","DR_AMR_rf_model.rds")
-#DR_AMR.rf <- readRDS(data_locationRF1)
-#print(DR_AMR.rf)
-
-```
-***Table 9:*** *Random Forest Output for the Unaligned Data Set. Simple Linear Regression of AMR Dependent with WHO Regions as Independent Using Date Unaligned Data*
-
-
 ```{r, echo=FALSE, message=FALSE}
 
 #| label: fig-schematic
@@ -276,17 +266,6 @@ knitr::include_graphics(here("results", "figures","randomForestRegressionAMR.png
 ```
 
 ***Figure 9:*** *Graph of the Random Forest Output for the Date Aligned Data Set.*
-
-
-```{r}
-
-#data_locationRF2 <- here::here("data","processed-data","AMR_rf_model.rds")
-#AMR.rf <- readRDS(data_locationRF2)
-#print(AMR.rf) 
-
-```
-
-***Table 10:*** *Random Forest Output for the Date Aligned Data Set. Simple Linear Regression of AMR Dependent with WHO Regions as Independent Using Date Unaligned Data*
 
 
 # Discussion
