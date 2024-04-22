@@ -236,7 +236,7 @@ knitr::kable(resulttable)
 
 # Results
 
-It is obvious from the regression data presented in **Table 4** that the cases of flu reported in the AMR WHO region are likely associated with the prior outbreak in the WPR region.  The EMR region is likely not a contributing factor.  Likewise, in **Table 5** the same can be said of the EUR WHO region outbreak.  It seems to be much more heavily dependent on the WPR region outbreak than the outbreaks in the AMR or EMR regions.  The results presented in **Table 4** were upheld by the results from **Table 6** where the linear regression set the AMR data as dependent and with EMR, WPR, and EUR as independent variables.  In this case we also see the association with previous outbreaks being potentailly linked to the WPR region outbreak.     
+It is obvious from the regression data presented in **Table 4** that the cases of flu reported in the AMR WHO region are likely associated with the prior outbreak in the WPR region.  The EMR region is likely not a contributing factor.  Likewise, in **Table 5** the same can be said of the EUR WHO region outbreak.  It seems to be much more heavily dependent on the WPR region outbreak than the outbreaks in the AMR or EMR regions.  The results presented in **Table 4** were upheld by the results from **Table 6** where the linear regression set the AMR data as dependent and with EMR, WPR, and EUR as independent variables.  In this case we also see the association with previous outbreaks being potentially linked to the WPR region outbreak.     
 
 
 ## Full analysis
@@ -270,7 +270,9 @@ knitr::include_graphics(here("results", "figures","randomForestRegressionAMR.png
 
 # Discussion
 
-If the Mean Squared Error (MSE) is very high (13640640 and 9173785, respectively) but the percentage of variance explained (87.64% and 92.72%, respectively) is close to one, this suggests a few possible scenarios:
+It is obvious from the data that there is a time/location dependence on seasonal flu outbreaks in the AMR and EUR WHO regions.  The simple regression models coupled with the visual data exploration support the idea that seasonal flu outbreaks in the WPR WHO region are potentially predictive of outbreaks in Europe and the Americas.
+
+The machine learning model resulted in a very high Mean Squared Error (MSE) with a percentage of explained variance close to one.  This suggests that the machine learning model chosen may not be appropriate.  If the MSE is very high (13640640 and 9173785, respectively) but the percentage of variance explained (87.64% and 92.72%, respectively) is close to one, this suggests a few possible scenarios:
 
 1.  **Over-fitting:** The model may be over-fitting to the training data, capturing noise or specific patterns that do not generalize well to unseen data. This can lead to high MSE as the model's predictions are inaccurate for new data despite explaining a high percentage of variance in the training data.
     
@@ -296,13 +298,11 @@ By addressing these aspects and fine-tuning the model, its performance can be im
 
 ## Strengths and Limitations
 
-
+In this case the data may not be amiable to a machine learning model.  Even if prior years of data are included in the analysis the machine learning model may not be able to yield more than is has here.  That being said, the relationships that are obvious in the simpler analysis are likely not sufficient to draw any concrete conclusion.  The linear regression and visual exploration of the data is certainly compelling and support the idea that seasonal flu outbreaks in the WPR WHO region are potentially predictive of outbreaks in Europe and the Americas.  That being said, the data that is available may have the depth to make this prediction.
 
 ## Conclusions
 
-*What are the main take-home messages?*
-
-
+The conclusion that can be drawn from this analysis is primarily due to the graphic exploration of the data and the simple linear regression work.  It is obvious that there is a time/location dependence on the spread of the seasonal flu.  However, more data is needed to complete this picture.  For a detailed study of time/location dependence of the season flu strains the data needs an added component.  The new component should be one that tracks the movement of individual organisms or, in this case, of individual strains of flu. In modern infection tracing the tool that allows this to be accomplished is genetic data.  By sequencing DNA and determining the relationships between the circulating flu strains and then adding data on these lineages into the time/location data recorded by the WHO a far more complete model can be created.     
 
 {{< pagebreak >}}
 
