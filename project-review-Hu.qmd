@@ -1,7 +1,7 @@
 ---
 title: Project Review Template 
-author: YOUR NAME
-date: date-modified
+author: Xueyan Hu
+date: 04-24-2024
 format: 
   html:
     toc: true
@@ -11,11 +11,11 @@ format:
 
 # Overview
 
-Title of project:
+Title of project: Geographic Spread of Seasonal Flu
 
-Name of project author(s):
+Name of project author(s): Clarke Miller 
 
-Name of project reviewer:
+Name of project reviewer: Xueyan Hu
 
 
 # Instructions
@@ -38,12 +38,12 @@ How well is the context of the project described? Is a comprehensive background,
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+Generally the introduction part is described well for flu and virus in 2 paragraphs, but I think it could be better if geographic spread related contents since the title is about this.
 
 ### Summary assessment (PICK ONE, DELETE THE OTHERS)
-* very poor contextualization and motivation
+
 * some contextualization and motivation
-* strong contextualization and motivation
+
 
 
 ## Question description
@@ -52,12 +52,12 @@ How well and clear are the question(s)/hypotheses the project aims to address de
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+I think the questions are listed clearly to me, but I think there is a gap between introduction and raised questions that might needs further explanation.
 
 ### Summary assessment
-* question/hypotheses unclear
+
 * question/hypotheses somewhat explained
-* question/hypotheses fully clear
+
 
 
 ## Data description
@@ -65,11 +65,10 @@ How well is the data overall described? Is the source provided? Is a codebook or
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+Source is provided and overall described well and meta-information is included also. 
 
 ### Summary assessment
-* source and overall structure of data poorly explained
-* source and overall structure of data somewhat explained
+
 * source and overall structure of data well explained
 
 
@@ -78,12 +77,12 @@ How well is the data cleaned/processed and explored? Are all steps reasonable an
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+The whole cleaning process is clear and well organized. The figures generated look nice and the explanation is in detailed, so I can understand them easily.
+But I think 'Figure 3: World Flu Burden by Region' could be improved a little bit because there are too many observations in the bar chart, it is not easy to differentiate them. All of the figures are shown in the main manuscript, and the summary table is impressive. 
 
 ### Summary assessment
-* major weaknesses in wrangling and exploratory component
+
 * some weaknesses in wrangling and exploratory component
-* essentially no weaknesses in wrangling and exploratory component
 
 
 
@@ -92,11 +91,10 @@ Were the analysis methods appropriate for the data? Was the analysis done proper
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+I think the linear regression models chosen are appropriate and there is no problem during data analysis. But the author might want to delete some words "3.5 Statistical Analysis:" in your manuscript which wasn't used by the author. 
 
 ### Summary assessment
-* wrong/inadequate analysis
-* defensible but not optimal analysis 
+
 * strong and reasonable analysis
 
 ## Presentation
@@ -104,12 +102,12 @@ How well are results presented? Are tables and figures easy to read and understa
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+The results are explained in detail and can be clearly understood. Tables and figures are presented as assisting tools. But I think it will be better if random forest model could be introduced a little bit more deeper and the figures of rf model could be improved since they only show the error changes by the number of tree, it could be better if prediction related information shown at the same time.
 
 ### Summary assessment
-* results are poorly presented, hard to understand, poor quality
+
 * results are presented ok, with room for improvement
-* results are very well presented
+
 
 
 ## Discussion/Conclusions
@@ -117,17 +115,16 @@ Are the study findings properly discussed? Are strengths and limitations acknowl
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+The discussion part include the finding obtained from data analysis with possible reasons of the results are also listed and analysed. I just have one small question. Since random forest model is not suitable for this data, then does the author need to suggest another better model or compared the result of random forest model with simple linear model? Strengths and limitations are acknowledged.
 
 ### Summary assessment
-* major parts of discussion missing or wrong 
-* minor parts wrong, missing or unclear
+
 * strong, complete and clear discussion
 
 
 ## Further comments
 
-_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+_I am not so sure besides random forest model, there won't be any more machine learning models could be fit to the data. So I may suggest trying other machine learning models or just using simple linear regression for prediction and compare the performance between 2 model._
 
 
 
@@ -140,12 +137,11 @@ Is the project well structured? Are files in well labeled folders? Do files have
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+I think I can find most of the files but it will be better if they are labeled more clearly so it will let me target the file I'm looking for right away among piled files. And there are some unused files or folders haven't been removed from the project folder.
 
 ### Summary assessment
-* poor and confusing structure
+
 * mostly clear, but some confusing parts (e.g. useless files, things in the wrong folders)
-* well structured
 
 
 ## Documentation 
@@ -153,11 +149,10 @@ How well is the project documented? Are you able to understand each step of the 
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+I think most of the steps are quite clear, but it will be better if unecessary words in the template could be deleted by the author.
 
 ### Summary assessment
-* poorly documented
-* decently documented with some gaps
+
 * fully and well documented
 
 
@@ -167,13 +162,22 @@ Are all results fully reproducible? Is documentation provided which clearly expl
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+Almost all the results are fully reproducible besides the following part. I have no idea why it needs java to be downloaded. But it doesn't affect other codes if I skip this line so it is not a problem. The instruction is provided is mainly in manuscript, but I think it could be better for me to understand if it can be explained a little more.
 
+suppressPackageStartupMessages(library(xlsx))
+The operation couldn’t be completed. Unable to locate a Java Runtime.
+Please visit http://www.java.com for information on installing Java.
+
+Warning: running command '/usr/libexec/java_home' had status 1Warning: Cannot find JVM library 'NA/lib/server/libjvm.dylib'
+Install Java and/or check JAVA_HOME (if in doubt, do NOT set it, it will be detected)Error: package or namespace load failed for ‘xlsx’:
+ .onLoad failed in loadNamespace() for 'rJava', details:
+  call: fun(libname, pkgname)
+  error: JVM could not be found
 
 ### Summary assessment
-* major parts not reproducible 
+ 
 * small parts not reproducible or required manual intervention 
-* fully reproducible without issues
+
 
 
 ## Thoroughness
@@ -181,17 +185,16 @@ How thorough was the overall study? Were alternatives (e.g. different ways of pr
 
 ### Feedback and Comments
 
-WRITE YOUR FEEDBACK HERE
+Questions are fully and thoroughly addressed. The overall study looks thorough, too. And 2 model types are involved in the full data analysis. But I still hold the thought that maybe more ml models could be applied and compared.
 
 ### Summary assessment
-* weak level of thoroughness
-* decent level of thoroughness
+
 * strong level of thorougness
 
 
 ## Further comments
 
-_Add any other comments regarding the overall project here. Write anything you think can help your classmate improve their project._
+_I think the way how the author organize the files and folders is a little bit off to me , and it could be improved a little bit. Besides, it will be better if all of the needed packages could be listed at the top of the quarto files. Also, there are some repeated and old contents in the quarto files which can be removed or it could be a little bit confusing to me. Read.me files should be updated, too. _
 
 
 
